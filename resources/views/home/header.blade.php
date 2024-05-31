@@ -15,6 +15,10 @@
                             <a class="nav-link" href="shop.html">
                                 Shop
                             </a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="orderdetail.html">
+                                    Orderdetail
+                                </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="why.html">
@@ -26,8 +30,9 @@
                     <div class="user_option">
                         @if (Route::has('login'))
                             @auth
-                                <a href="">
+                                <a href="{{url('mycart')}}">
                                     <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                    [{{$count}}]
                                 </a>
 
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Order;
 use App\Models\Product;
 
 class AdminController extends Controller
@@ -16,15 +16,14 @@ class AdminController extends Controller
     public function upload_product(Request $request)
     {
         $data = new Product;
-        $data-> title = $request->title;
-        $data-> description = $request->description;
-        $data-> price = $request->price;
-        $data-> quantity = $request->qty;
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->price = $request->price;
+        $data->quantity = $request->quantity;
         $image = $request->image;
         if($image)
         {
-            $imagename = time().'.'.$image->
-                getClientOriginalExtension();
+            $imagename = time().'.'.$image->getClientOriginalExtension();
 
             $request->image->move('products', $imagename);
             
@@ -59,7 +58,7 @@ class AdminController extends Controller
 
         toastr()->timeOut(10000)->closeButton()->addSuccess('Product Deleted Successfully');
 
-        return redirect()-> back(); 
+        return redirect()->back(); 
     }
 
     public function update_product($id)
@@ -78,7 +77,7 @@ class AdminController extends Controller
         $image = $request->image;
         if($image)
         {
-            $imagename = time().'.'.$image-> getClientOriginalExtension(); 
+            $imagename = time().'.'.$image->getClientOriginalExtension(); 
             
             $request->image->move('products', $imagename);
             $data->image = $imagename;
@@ -89,4 +88,26 @@ class AdminController extends Controller
 
         return redirect('/view_product');  
     }   
+
+    public function view_order()
+    {
+        $orders = Order::all();   
+        return view('admin.order', compact('orders'));
+    }
+
+    public function on_the_way($id)
+    {
+        $order = Order::find($id);
+        $order->status = 'On the way';
+        $order->save();
+        return redirect('/view_order');
+    }
+
+    public function delivered($id)
+    {
+        $order = Order::find($id);
+        $order->status = 'Delivered';
+        $order->save();
+        return redirect('/view_order');
+    }
 } 

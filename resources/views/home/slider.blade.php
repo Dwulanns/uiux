@@ -7,6 +7,7 @@
                                 <div class="row">
                                     <div class="col-md-7">
                                         <div class="detail-box">
+                                            {{-- nanti di ganti --}}
                                             <h1>
                                                 Welcome To Our <br>
                                                 Gift Shop

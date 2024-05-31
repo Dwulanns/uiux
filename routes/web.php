@@ -41,3 +41,22 @@ route::post('edit_product/{id}', [AdminController::class, 'edit_product'])->
     middleware(['auth','admin']);
     
 route::get('product_details/{id}', [HomeController::class, 'product_details']);
+route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->middleware(['auth', 'verified']);
+
+ route::get('mycart', [HomeController::class, 'mycart'])->middleware(['auth', 'verified']);
+// Route::get('delete-cart/{id}', [HomeController::class, 'delete_cart'])->middleware(['auth', 'verified']);
+// Route::get('editCartItem/{id}', [HomeController::class, 'editCartItem'])->middleware(['auth', 'verified']);
+
+Route::post('/update-cart', [HomeController::class, 'updateCart'])->name('update-cart');
+Route::post('/confirm_order', [HomeController::class, 'confirm_order'])->name('confirm_order');
+Route::get('/delete-cart/{id}', [HomeController::class, 'delete_cart'])->name('delete-cart');
+Route::post('/edit-cart/{id}', [HomeController::class, 'editCartItem'])->name('edit-cart');
+
+
+Route::post('confirm_order', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
+
+Route::get('view_order', [AdminController::class, 'view_order'])->middleware(['auth', 'admin']);
+
+Route::get('on_the_way/{id}', [AdminController::class, 'on_the_way'])->middleware(['auth', 'admin']);
+Route::get('delivered/{id}', [AdminController::class, 'delivered'])->middleware(['auth', 'admin']);
+

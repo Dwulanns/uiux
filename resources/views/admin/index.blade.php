@@ -9,7 +9,7 @@
 <body>
     @include('admin.header')
 
-        <!-- Sidebar Navigation-->
+        <!-- Sidebaacr Navigation-->
 
         @include('admin.sidebar')
 
