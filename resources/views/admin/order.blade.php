@@ -33,11 +33,8 @@
 
 <body>
     @include('admin.header')
-
-    <!-- Sidebar Navigation -->
     @include('admin.sidebar')
 
-    <!-- Page Content -->
     <div class="page-content">
         <div class="page-header">
             <div class="container-fluid">
@@ -51,34 +48,52 @@
                             <th>Address</th>
                             <th>Phone</th>
                             <th>Product Title</th>
+                            <th>Stock</th>
                             <th>Price</th>
                             <th>Image</th>
                             <th>Status</th>
                             <th>Change Status</th>
                         </tr>
-                        @foreach($orders as $order)
-                        <tr>
-                            <td>{{ $order->name }}</td>
-                            <td>{{ $order->rec_address }}</td>
-                            <td>{{ $order->phone }}</td>
-                            <td>{{ $order->product->title }}</td>
-                            <td>{{ $order->product->price }}</td>
-                            <td>
-                                <img width="150" src="products/{{ $order->product->image }}">
-                            </td>
-                            <td>
-                                @if($order->status == 'in progress')
-                                <span style="color: red">{{$order->status}}</span>
-                                @elseif($order->status == 'on the way')
-                                @else
-                                <span style="color: skyblue">{{$order->status}}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a class="btn btn-primary" href="{{url('on_the_way', $order->id)}}">On the way</a>
-                                <a class="btn btn-success" href="{{url('delivered', $order->id)}}">Delivered</a>
-                            </td>                            
-                        </tr>
+                        @foreach($orders as $userId => $userOrders)
+                            @php
+                                $totalItems = $userOrders->sum(fn($order) => $order->orderItems->count());
+                                $itemCounter = 0;
+                            @endphp
+                            @foreach($userOrders as $order)
+                                @foreach($order->orderItems as $orderItem)
+                                    <tr>
+                                        @if($itemCounter == 0)
+                                            <td rowspan="{{ $totalItems }}">{{ $order->user->name }}</td>
+                                            <td rowspan="{{ $totalItems }}">{{ $order->rec_address }}</td>
+                                            <td rowspan="{{ $totalItems }}">{{ $order->phone }}</td>
+                                        @endif
+                                        <td>{{ $orderItem->product->title ?? 'Product not found' }}</td>
+                                        <td>{{ $orderItem->quantity }}</td>
+                                        <td>{{ $orderItem->product->price ?? '-' }}</td>
+                                        <td>
+                                            @if($orderItem->product)
+                                                <img height="120" width="120" src="{{ asset('products/' . $orderItem->product->image) }}" alt="Product Image">
+                                            @else
+                                                Image not available
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($order->status == 'in progress')
+                                                <span style="color: red">{{ $order->status }}</span>
+                                            @elseif($order->status == 'on the way')
+                                                <span style="color: orange">{{ $order->status }}</span>
+                                            @else
+                                                <span style="color: skyblue">{{ $order->status }}</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" href="{{ url('on_the_way', $order->id) }}">On the way</a>
+                                            <a class="btn btn-success" href="{{ url('delivered', $order->id) }}">Delivered</a>
+                                        </td>
+                                    </tr>
+                                    @php $itemCounter++; @endphp
+                                @endforeach
+                            @endforeach
                         @endforeach
                     </table>
                     @endif
@@ -86,7 +101,6 @@
             </div>
         </div>
     </div>
-    <!-- JavaScript files-->
     @include('admin.js')
 </body>
 

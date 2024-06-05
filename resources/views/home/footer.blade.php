@@ -23,8 +23,7 @@
                             ABOUT US
                         </h6>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doLorem ipsum dolor sit amet,
-                            consectetur adipiscing elit, sed doLorem ipsum dolor sit amet,
+                            Selamat datang di Nirwana, tempat di mana kelezatan laut bertemu dengan jaminan kualitas tertinggi! Kami adalah destinasi utama bagi para penggemar ikan dan makanan laut yang mencari produk berkualitas tinggi dengan sertifikasi lengkap. Dari ikan segar hingga olahan ikan, setiap produk kami telah melewati standar ketat BPOM, serta memiliki sertifikasi halal dan SKP. Staf kami yang berpengetahuan luas siap membantu Anda memilih produk terbaik. Temukan pengalaman berbelanja yang tak tertandingi di Nirwana hari ini!
                         </p>
                     </div>
                     <div class="col-md-6 col-lg-3">

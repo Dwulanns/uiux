@@ -22,7 +22,8 @@
             color: white !important;
         }
 
-        input[type = 'text'] {
+        input[type='text'],
+        input[type='number'] {
             width: 350px;
             height: 50px;
         }
@@ -75,6 +76,11 @@
                         <div class="input_deg">
                             <label>Quantity</label>
                             <input type="number" name="quantity">
+                        </div>
+
+                        <div class="input_deg">
+                            <label>Stock</label>
+                            <input type="number" name="stock">
                         </div>
 
                         <div class="input_deg">

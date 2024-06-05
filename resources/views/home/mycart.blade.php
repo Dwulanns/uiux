@@ -65,7 +65,7 @@
 
     <div class="div_deg">
         <div class="order_deg">
-            <form action="{{ url('confirm_order') }}" method="POST">
+            <form action="{{ route('confirm_order') }}" method="POST">
                 @csrf
                 <div class="div_gap">
                     <label>Receiver Name</label>
@@ -79,8 +79,13 @@
                     <label>Receiver Phone</label>
                     <input type="text" name="phone" value="{{ Auth::user()->phone }}">
                 </div>
+                <!-- Tambahkan input tersembunyi untuk setiap item dalam keranjang belanja -->
+                @foreach($cart as $item)
+                <input type="hidden" name="cart[{{ $item->id }}][product_id]" value="{{ $item->product->id }} ">
+                <input type="hidden" name="cart[{{ $item->id }}][quantity]" value="{{ $item->quantity }}">
+                @endforeach
                 <div class="div_gap">
-                    <input class="btn btn-primary" type="submit" value="Place Order">
+                    <input class="btn btn-primary" type="submit" value="Order">
                 </div>
             </form>
         </div>
@@ -91,11 +96,11 @@
             <th>Select</th>
             <th>Product Title</th>
             <th>Price</th>
+            <th>Stock</th> <!-- Tambahkan kolom Stock -->
             <th>Image</th>
             <th>Quantity</th>
             <th>Edit</th>
         </tr>
-        <?php $value = 0; ?>
         @foreach($cart as $item)
         <tr data-title="{{ $item->product->title }}">
             <td>
@@ -103,6 +108,7 @@
             </td>
             <td>{{ $item->product->title }}</td>
             <td>{{ $item->product->price }}</td>
+            <td>{{ $item->product->stock }}</td> <!-- Tampilkan stok -->
             <td>
                 <img width="150" src="/products/{{ $item->product->image }}">
             </td>
@@ -114,7 +120,6 @@
                 <button class="btn btn-warning update-btn" data-id="{{ $item->id }}">Update</button>
             </td>
         </tr>
-        <?php $value += $item->product->price * $item->quantity; ?>
         @endforeach
     </table>
 

@@ -9,14 +9,11 @@
                                         <div class="detail-box">
                                             {{-- nanti di ganti --}}
                                             <h1>
-                                                Welcome To Our <br>
-                                                Gift Shop
+                                                Welcome To <br>
+                                                Nirwana Frozen Food
                                             </h1>
                                             <p>
-                                                Sequi perspiciatis nulla reiciendis, rem, tenetur impedit, eveniet non
-                                                necessitatibus error distinctio mollitia suscipit. Nostrum fugit
-                                                doloribus consequatur distinctio esse, possimus maiores aliquid repellat
-                                                beatae cum, perspiciatis enim, accusantium perferendis.
+                                                Selamat datang di Nirwana, tempat di mana kelezatan laut bertemu dengan jaminan kualitas tertinggi! Kami adalah destinasi utama bagi para penggemar ikan dan makanan laut yang mencari produk berkualitas tinggi dengan sertifikasi lengkap. Dari ikan segar hingga olahan ikan, setiap produk kami telah melewati standar ketat BPOM, serta memiliki sertifikasi halal dan SKP. Staf kami yang berpengetahuan luas siap membantu Anda memilih produk terbaik. Temukan pengalaman berbelanja yang tak tertandingi di Nirwana hari ini!
                                             </p>
                                             <a href="">
                                                 Contact Us

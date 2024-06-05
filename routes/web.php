@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,11 +53,21 @@ Route::post('/confirm_order', [HomeController::class, 'confirm_order'])->name('c
 Route::get('/delete-cart/{id}', [HomeController::class, 'delete_cart'])->name('delete-cart');
 Route::post('/edit-cart/{id}', [HomeController::class, 'editCartItem'])->name('edit-cart');
 
-
-Route::post('confirm_order', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
+// Route::post('/confirm_order', [HomeController::class, 'confirmOrder'])->name('confirm_order');
+// Route::post('confirm_order', [HomeController::class, 'confirm_order'])->middleware(['auth', 'verified']);
 
 Route::get('view_order', [AdminController::class, 'view_order'])->middleware(['auth', 'admin']);
 
+
 Route::get('on_the_way/{id}', [AdminController::class, 'on_the_way'])->middleware(['auth', 'admin']);
 Route::get('delivered/{id}', [AdminController::class, 'delivered'])->middleware(['auth', 'admin']);
+
+route::get('about', [HomeController::class, 'about']);
+route::get('shop', [HomeController::class, 'shop']);
+
+Route::get('/products', [HomeController::class, 'showProducts'])->name('products.show');
+// Route::get('/order_detail/{id}', [HomeController::class, 'orderDetail'])->name('order_detail');
+
+
+Route::get('/order/{id}', [HomeController::class, 'orderDetail'])->name('order.detail');
 

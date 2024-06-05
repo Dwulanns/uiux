@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -12,34 +13,34 @@ class AdminController extends Controller
     {
         return view('admin.add_product');
     }
- 
+
     public function upload_product(Request $request)
     {
-        $data = new Product;
-        $data->title = $request->title;
-        $data->description = $request->description;
-        $data->price = $request->price;
-        $data->quantity = $request->quantity;
-        $image = $request->image;
-        if($image)
-        {
-            $imagename = time().'.'.$image->getClientOriginalExtension();
+        // Create a new Product instance
+        $product = new Product();
+        $product->title = $request->input('title');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->quantity = $request->input('quantity');
+        $product->stock = $request->input('stock');
 
-            $request->image->move('products', $imagename);
-            
-            $data->image = $imagename;
+        // Handle the product image upload
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('products'), $imageName);
+            $product->image = $imageName;
         }
-        $data->save();
-        
-        toastr()->timeOut(10000)->closeButton()->addSuccess('Product Added Successfully');
-        
-        return redirect()->back(); 
-        
+
+        // Save the product to the database
+        $product->save();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Product added successfully!');
     }
 
     public function view_product()
     {
-        $product = Product::paginate(3);
+        $product = Product::paginate(10);
         return view('admin.view_product', compact('product'));
     }
 
@@ -49,11 +50,10 @@ class AdminController extends Controller
 
         $image_path = public_path('products/'. $data->image);
 
-        if(file_exists($image_path))
-        {
+        if (file_exists($image_path)) {
             unlink($image_path);
         }
-        
+
         $data->delete();
 
         toastr()->timeOut(10000)->closeButton()->addSuccess('Product Deleted Successfully');
@@ -69,31 +69,54 @@ class AdminController extends Controller
 
     public function edit_product(Request $request, $id)
     {
-        $data = Product::find($id);
-        $data->title = $request->title;
-        $data->description = $request->description;
-        $data->price = $request->price;
-        $data->quantity = $request->quantity;
-        $image = $request->image;
-        if($image)
-        {
-            $imagename = time().'.'.$image->getClientOriginalExtension(); 
-            
-            $request->image->move('products', $imagename);
-            $data->image = $imagename;
+        $product = Product::find($id);
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found.');
         }
 
-        $data->save();
+        $product->title = $request->input('title');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->quantity = $request->input('quantity');
+        $product->stock = $request->input('stock');
+
+        // Handle image upload if a new image is provided
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($product->image && file_exists(public_path('products/'.$product->image))) {
+                unlink(public_path('products/'.$product->image));
+            }
+
+            // Upload new image
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('products'), $imageName);
+            $product->image = $imageName;
+        }
+
+        $product->save();
+
         toastr()->timeOut(10000)->closeButton()->addSuccess('Product Updated Successfully');
 
-        return redirect('/view_product');  
-    }   
-
-    public function view_order()
-    {
-        $orders = Order::all();   
-        return view('admin.order', compact('orders'));
+        return redirect('/view_product');
     }
+
+//     public function view_order()
+// {
+//     // Fetch all orders and group by user_id
+//     $orders = Order::with('product')
+//         ->get()
+//         ->groupBy('user_id'); // Group orders by user_id
+
+//     return view('admin.order', compact('orders'));
+// }
+public function view_order()
+{
+    $orders = Order::with(['user', 'orderItems.product'])->get()->groupBy('user_id');
+    return view('admin.order', compact('orders'));
+}
+
+
 
     public function on_the_way($id)
     {
@@ -110,4 +133,4 @@ class AdminController extends Controller
         $order->save();
         return redirect('/view_order');
     }
-} 
+}

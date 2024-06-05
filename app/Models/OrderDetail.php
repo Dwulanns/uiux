@@ -7,5 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
-    use HasFactory;
+    public function orderDetail()
+{
+    return $this->belongsTo(OrderDetail::class, 'id_order_detail');
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class, 'id_user');
+}
+
 }

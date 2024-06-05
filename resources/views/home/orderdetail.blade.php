@@ -2,82 +2,110 @@
 <html>
 
 <head>
-    @include('home.css')
-
-    <style type="text/css">
-        .div_center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
+    @include('admin.css')
+    <style>
+        .nota-container {
+            max-width: 800px;
+            margin: auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background: #fff;
         }
 
-        detail-box {
-            padding: 15px;
+        .nota-header, .nota-footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nota-header h2, .nota-footer p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nota-body {
+            margin-bottom: 20px;
+        }
+
+        .nota-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .nota-table th, .nota-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .nota-table th {
+            background-color: #f2f2f2;
+        }
+
+        .total {
+            text-align: right;
         }
     </style>
 </head>
 
 <body>
-    <div class="hero_area">
-        <!-- header section strats -->
+    @include('admin.header')
+    @include('admin.sidebar')
 
-        @include('home.header')
-
-        <!-- end header section -->
-
-    </div>
-    <!-- end hero area -->
-
-    <!-- Product details start -->
-
-    <section class="shop_section layout_padding">
-        <div class="container">
-
-            <div class="row">
-
-
-                <div class="col-md-12">
-                    <div class="box">
-
-                        <div class="div_center">
-                            <img width="400" src="/products/{{ $data->image }}" alt="">
-                        </div>
-
-                        <div class="detail-box">
-                            <h6>
-                                {{ $data->title }}
-                            </h6>
-                            <h6> Price
-                                <span>{{ $data->price }} K</span>
-                            </h6>
-                        </div>
-                        <div class="detail-box">
-                            <h6> Available Quantity
-                                <span>{{ $data->quantity }}</span>
-                            </h6>
-                        </div>
-                        <div class="detail-box">
-                            <p>{{ $data->description }}</p>
-
-                        </div>
-
-                    </div>
-                </div>
-
+    <div class="page-content">
+        <div class="nota-container">
+            <div class="nota-header">
+                <h2>Order Nota</h2>
+                <p>Order ID: {{ $order->id }}</p>
+                <p>Date: {{ $order->created_at->format('d M, Y') }}</p>
             </div>
 
+            <div class="nota-body">
+                <h3>Customer Details</h3>
+                <p>Name: {{ $order->user->name }}</p>
+                <p>Address: {{ $order->rec_address }}</p>
+                <p>Phone: {{ $order->phone }}</p>
+
+                <h3>Order Details</h3>
+                <table class="nota-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($grouped_checkouts as $groupedCheckout)
+                            @php
+                                $orderDetail = $groupedCheckout['order_detail'];
+                                $total = $orderDetail->quantity * $orderDetail->product->price;
+                            @endphp
+                            <tr>
+                                <td>{{ $orderDetail->product->title }}</td>
+                                <td>{{ $orderDetail->quantity }}</td>
+                                <td>{{ $orderDetail->product->price }}</td>
+                                <td>{{ $total }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <div class="total">
+                    <h3>Total: {{ $grouped_checkouts->sum(function($groupedCheckout) {
+                        $orderDetail = $groupedCheckout['order_detail'];
+                        return $orderDetail->quantity * $orderDetail->product->price;
+                    }) }}</h3>
+                </div>
+            </div>
+
+            <div class="nota-footer">
+                <p>Thank you for your purchase!</p>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Product details end -->
-
-    <!-- info section -->
-
-    @include('home.footer')
-
-    <!-- end info section -->
-
+    @include('admin.js')
 </body>
 
 </html>

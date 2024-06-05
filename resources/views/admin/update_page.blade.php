@@ -22,6 +22,10 @@
             height: 60px;
         }
 
+        input[type='number'] {
+            width: 300px;
+            height: 60px;
+        }
 
         textarea {
             width: 450px;
@@ -64,6 +68,10 @@
                         <div>
                             <label>Quantity</label>
                             <input type="number" name="quantity" value="{{ $data->quantity }}">
+                        </div>
+                        <div>
+                            <label>Stock</label>
+                            <input type="number" name="stock" value="{{ $data->stock }}">
                         </div>
                         <div>
                             <label>Current Image</label>
