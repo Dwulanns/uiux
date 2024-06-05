@@ -110,55 +110,62 @@ class HomeController extends Controller
     {
         // Ambil data cart items dari form
         $cartItems = $request->input('cart');
-    
+        $rec_address = $request->input('address');
+        $phone = $request->input('phone');
+
+//        dd($cartItems);
+
         // Validasi data cart items
         if (empty($cartItems)) {
             Toastr::error('Your cart is empty');
             return redirect()->back();
         }
-    
+
         // Buat order baru
         $order = new Order();
         $order->user_id = Auth::id();
         $order->status = 'In Progress'; // Perbaiki penamaan status
+        $order->rec_address = $rec_address;
+        $order->phone = $phone;
         $order->save();
-    
+
         // Loop melalui data cart items untuk membuat order items dan menyesuaikan stok
         foreach ($cartItems as $itemId => $cartItem) {
             $productId = $cartItem['product_id'];
             $quantity = $cartItem['quantity'];
-    
+
             // Validasi product ID
             if (empty($productId)) {
                 Toastr::error('Invalid product ID');
                 return redirect()->back();
             }
-    
+
             $product = Product::find($productId);
-    
+
             // Validasi product
             if (!$product) {
                 Toastr::error('Product not found');
                 return redirect()->back();
             }
-    
+
             // Validasi stok
             if ($product->stock < $quantity) {
                 Toastr::error('Not enough stock available for ' . $product->title);
                 return redirect()->back();
             }
-    
+
             // Buat order item baru
             $orderItem = new OrderItem();
             $orderItem->order_id = $order->id;
             $orderItem->product_id = $productId;
+
             $orderItem->quantity = $quantity;
             $orderItem->save();
-    
+
             // Kurangi stok produk
             $product->stock -= $quantity;
             $product->save();
-    
+
             // Hapus produk dari keranjang
             $cartItem = Cart::where('user_id', Auth::id())
                             ->where('product_id', $productId)
@@ -169,47 +176,25 @@ class HomeController extends Controller
         }
     toastr()->success('Order confirmed successfully!');
         // Redirect ke halaman detail order atau halaman lain
-        // 
+        //
         return redirect()->route('order.detail', ['id' => $order->id]);
     }
-    
+
     public function orderDetail($id)
     {
-        $userId = Auth::user()->id; // Get the ID of the logged-in user
-        $order = Order::with('product')
-                      ->where('id', $id)
-                      ->where('user_id', $userId) // Filter by user ID
-                      ->first();
-    
+        $order = Order::with('orderItems.product')
+            ->where('id', $id)
+            ->where('user_id', Auth::id())
+            ->first();
+
         if (!$order) {
-            Toastr::error('Order not found');
+            toastr()->error('Order not found');
             return redirect()->back();
         }
-    
-        $orderDetails = Order::where('id', $order->id)
-                                   ->where('status', true)
-                                   ->latest()
-                                   ->get(); // Get all order details with status true
-    
-        $groupedCheckouts = [];
-    
-        foreach ($orderDetails as $orderDetail) {
-            $checkouts = Order::where('id_order_detail', $orderDetail->id)
-                                   ->where('id_user', $userId) // Filter by user ID
-                                   ->get();
-            $groupedCheckouts[] = [
-                'order_detail' => $orderDetail,
-                'checkouts' => $checkouts,
-            ];
-        }
-        dd($groupedCheckouts);
-    
-        return view('home.orderdetail', [
-            'order' => $order,
-            'grouped_checkouts' => $groupedCheckouts,
-        ]);
+
+        return view('home.orderdetail', ['order' => $order]);
     }
-    
+
 
 
 

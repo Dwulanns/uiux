@@ -76,26 +76,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($grouped_checkouts as $groupedCheckout)
-                            @php
-                                $orderDetail = $groupedCheckout['order_detail'];
-                                $total = $orderDetail->quantity * $orderDetail->product->price;
-                            @endphp
-                            <tr>
-                                <td>{{ $orderDetail->product->title }}</td>
-                                <td>{{ $orderDetail->quantity }}</td>
-                                <td>{{ $orderDetail->product->price }}</td>
-                                <td>{{ $total }}</td>
-                            </tr>
-                        @endforeach
+                    @foreach($order->orderItems as $orderItem)
+                        @php
+                            $total = $orderItem->quantity * $orderItem->product->price;
+                        @endphp
+                        <tr>
+                            <td>{{ $orderItem->product->title }}</td>
+                            <td>{{ $orderItem->quantity }}</td>
+                            <td>{{ $orderItem->product->price }}</td>
+                            <td>{{ $total }}</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
                 <div class="total">
-                    <h3>Total: {{ $grouped_checkouts->sum(function($groupedCheckout) {
-                        $orderDetail = $groupedCheckout['order_detail'];
-                        return $orderDetail->quantity * $orderDetail->product->price;
-                    }) }}</h3>
+                    <h3>Total: {{ $order->orderItems->sum(function($orderItem) {
+        return $orderItem->quantity * $orderItem->product->price;
+    }) }}</h3>
                 </div>
             </div>
 
