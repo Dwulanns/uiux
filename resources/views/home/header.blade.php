@@ -15,7 +15,7 @@
                 </li>
                 <li class="nav-item">
                     @isset($order)
-                        <a href="{{ route('order_detail', ['id' => $order->id]) }}">Order Details</a>
+                        <a href="{{ route('order.detail', ['id' => $order->id]) }}">Order Details</a>
                     @else
                         <a href=""{{ url('/order_detail') }}">Order Details</a>
                     @endisset

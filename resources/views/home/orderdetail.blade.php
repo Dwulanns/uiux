@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    @include('admin.css')
+    @include('home.css')
     <style>
         .nota-container {
             max-width: 800px;
@@ -48,8 +48,8 @@
 </head>
 
 <body>
-    @include('admin.header')
-    @include('admin.sidebar')
+    @include('home.header')
+    {{-- @include('home.sidebar') --}}
 
     <div class="page-content">
         <div class="nota-container">
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    @include('admin.js')
+    {{-- @include('home.js') --}}
 </body>
 
 </html>
